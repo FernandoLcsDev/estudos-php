@@ -35,7 +35,61 @@
         };
     }
     
-    $a = z(2);
-    $b = z(3);
-    echo $a(3) . $b(5);
+    $a = z(2); // 22
+    $b = z(3); // 333
+    echo $a(3) . $b(5); // a(3) -> 22 => 33 | b(5) -> 333 => 555
+
+    echo '</br>';
+
+    class Base {
+        protected static function whoami() {
+            echo "Base ";
+        }
+        public static function whoareyou() {
+            static::whoami();
+        }
+    }
+
+    class A extends Base {
+        public static function test() {
+            Base::whoareyou();
+            self::whoareyou();
+            parent::whoareyou();
+            A::whoareyou();
+            static::whoareyou();
+        }
+        public static function whoami() {
+            echo "A ";
+        }
+    }
+
+    class B extends A {
+        public static function whoami() {
+            echo "B ";
+        }
+    }
+
+    B::test(); // Base::whoareyou() -> Base | (B) self::whoareyou() -> B | parent::whoareyou() -> B | A::whoareyou() -> A | static::whoareyou() -> B
+
+    echo '</br>';
+
+    class Foo Implements ArrayAccess {
+        function offsetExists($k) { return true;}
+        function offsetGet($k) {return 'a';}
+        function offsetSet($k, $v) {}
+        function offsetUnset($k) {}
+    }
+    $x = new Foo();
+    echo array_key_exists('foo', $x)?'true':'false'; // false
+
+    echo '</br>';
+
+    class Bar {
+        private $a = 'b';
+        public $c = 'd';
+    }
+    $x = (array) new Bar();
+    echo array_key_exists('a', $x) ? 'true' : 'false'; // false => a = PRIVATE
+    echo '-';
+    echo array_key_exists('c', $x) ? 'true' : 'false'; // true => c = PUBLIC
 ?>
