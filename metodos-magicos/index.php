@@ -29,4 +29,15 @@
     
     $test = new Test2();
     $test->S('A');// A,A => S não existe é chamado __call()
+
+    class Magic {
+        protected $v = array("a" => 1, "b" => 2, "c" => 3);
+        public function &__get($v) {// Atenção ao '&'
+            return $this->v[$v];
+        }
+    }
+
+    $m = new Magic();
+    $m->d[] = 4;
+    echo $m->d[0];// 4
 ?>
